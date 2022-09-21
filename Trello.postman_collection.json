@@ -1,0 +1,1044 @@
+{
+	"info": {
+		"_postman_id": "5f77d051-3540-4053-9348-b02db822c0de",
+		"name": "Trello",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13723095"
+	},
+	"item": [
+		{
+			"name": "Organization",
+			"item": [
+				{
+					"name": "Get Organizations",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate Get Organizations API Response format and time.\", function() {\r",
+									"    pm.response.to.be.json\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(3000)\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201,202])\r",
+									"});\r",
+									"pm.test(\"Validate Get Organizations API Response data.\", function() {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\")\r",
+									"    pm.expect(pm.response.text()).to.include(\"Prashant Vadher\")\r",
+									"    pm.expect(pm.response.text()).to.include(\"Trello\")\r",
+									"   \r",
+									"   });\r",
+									"jsonData = JSON.parse(responseBody)\r",
+									"console.log(\"JSON Body - \" + JSON.stringify(jsonData))\r",
+									"pm.environment.set('idOrganization', jsonData[0].id)\r",
+									"pm.environment.set('BoardName', 'New Board - ' + _.random(1,9999))\r",
+									"pm.environment.set('ListName', 'New List - ' + _.random(1,9999))\r",
+									"pm.environment.set('CardName', 'New Card - ' + _.random(1,9999))\r",
+									"pm.environment.set('LabelName', 'New Label - ' + _.random(1,9999))\r",
+									"console.log(\"idOrganization: \" + jsonData[0].id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/1/members/me/organizations?key={{Key}}&token={{Token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"1",
+								"members",
+								"me",
+								"organizations"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create Records",
+			"item": [
+				{
+					"name": "Create a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate Create a Board API Response data.\", function() {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\")\r",
+									"    var jsonData = pm.response.json()\r",
+									"    pm.expect(jsonData.idOrganization).to.equal(environment.idOrganization)\r",
+									"    pm.expect(jsonData.name).to.equal(environment.BoardName)\r",
+									"});\r",
+									"jsonData = JSON.parse(responseBody)\r",
+									"console.log(\"JSON Body - \" + JSON.stringify(jsonData))\r",
+									"pm.environment.set('idBoard', jsonData.id)\r",
+									"console.log(\"idBoard: \" + jsonData.id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/1/boards/?name={{BoardName}}&key={{Key}}&token={{Token}}&idOrganization={{idOrganization}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{BoardName}}"
+								},
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								},
+								{
+									"key": "idOrganization",
+									"value": "{{idOrganization}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate Create a List API Response data.\", function() {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\")\r",
+									"    var jsonData = pm.response.json()\r",
+									"    pm.expect(jsonData.idBoard).to.equal(environment.idBoard)\r",
+									"    pm.expect(jsonData.name).to.equal(environment.ListName)\r",
+									"});\r",
+									"jsonData = JSON.parse(responseBody)\r",
+									"console.log(\"JSON Body - \" + JSON.stringify(jsonData))\r",
+									"pm.environment.set('idList', jsonData.id)\r",
+									"console.log(\"idList: \" + jsonData.id)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/1/lists?name={{ListName}}&key={{Key}}&token={{Token}}&idBoard={{idBoard}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"1",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{ListName}}"
+								},
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								},
+								{
+									"key": "idBoard",
+									"value": "{{idBoard}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate API Response data.\", function() {\r",
+									"    pm.expect(pm.response.text()).to.include(\"id\")\r",
+									"    var jsonData = pm.response.json()\r",
+									"    pm.expect(jsonData.idBoard).to.equal(environment.idBoard)\r",
+									"    pm.expect(jsonData.idList).to.equal(environment.idList)\r",
+									"    pm.expect(jsonData.name).to.equal(environment.CardName)\r",
+									"});\r",
+									"jsonData = JSON.parse(responseBody)\r",
+									"pm.environment.set('idCard', jsonData.id)\r",
+									"console.log(\"idCard: \" + jsonData.id)\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/1/cards?key={{Key}}&token={{Token}}&idList={{idList}}&name={{CardName}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"1",
+								"cards"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								},
+								{
+									"key": "idList",
+									"value": "{{idList}}"
+								},
+								{
+									"key": "name",
+									"value": "{{CardName}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Validate Get Organizations API Response format and time.\", function() {",
+							"    pm.response.to.be.json",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000)",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201,202])",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Delete Records",
+			"item": [
+				{
+					"name": "Delete a Card",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/1/cards/{{idCard}}?key={{Key}}&token={{Token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"1",
+								"cards",
+								"{{idCard}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Board",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/1/boards/{{idBoard}}?key={{Key}}&token={{Token}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"1",
+								"boards",
+								"{{idBoard}}"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{Key}}"
+								},
+								{
+									"key": "token",
+									"value": "{{Token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Validate Delete API Response format and time.\", function() {",
+							"    pm.response.to.be.json",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000)",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201,202])",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Cases",
+			"item": [
+				{
+					"name": "Positive Cases",
+					"item": [
+						{
+							"name": "Create Label",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"LabelColor\",_.sample(['yellow','purple','blue', 'red', 'green', 'orange', 'black', 'sky', 'pink', 'lime']));\r",
+											"jsonData = JSON.parse(responseBody)\r",
+											"pm.environment.set('idLabel', jsonData.id)\r",
+											"console.log(\"idLabel: \" + jsonData.id)\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/labels/?key={{Key}}&token={{Token}}&name={{LabelName}}&color={{LabelColor}}&idBoard={{idBoard}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"labels",
+										""
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "name",
+											"value": "{{LabelName}}"
+										},
+										{
+											"key": "color",
+											"value": "{{LabelColor}}"
+										},
+										{
+											"key": "idBoard",
+											"value": "{{idBoard}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Label",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.environment.set(\"LabelColor\",_.sample(['yellow','purple','blue', 'red', 'green', 'orange', 'black', 'sky', 'pink', 'lime']));\r",
+											"jsonData = JSON.parse(responseBody)\r",
+											"pm.environment.set('idLabel', jsonData.id)\r",
+											"console.log(\"idLabel: \" + jsonData.id)\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/labels/{{idLabel}}?key={{Key}}&token={{Token}}&name={{LabelName}}&color={{LabelColor}}&idBoard={{idBoard}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"labels",
+										"{{idLabel}}"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "name",
+											"value": "{{LabelName}}"
+										},
+										{
+											"key": "color",
+											"value": "{{LabelColor}}"
+										},
+										{
+											"key": "idBoard",
+											"value": "{{idBoard}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Label",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/labels/{{idLabel}}?key={{Key}}&token={{Token}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"labels",
+										"{{idLabel}}"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Card",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/cards/{{idCard}}/?key={{Key}}&token={{Token}}&idLabels={{idLabel}}&due=08-20-2025&desc=Hey there, Trello's Platform team uses this board to keep developers up-to-date.",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"cards",
+										"{{idCard}}",
+										""
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "idLabels",
+											"value": "{{idLabel}}"
+										},
+										{
+											"key": "due",
+											"value": "08-20-2025"
+										},
+										{
+											"key": "desc",
+											"value": "Hey there, Trello's Platform team uses this board to keep developers up-to-date."
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Comment to a Card",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/cards/{{idCard}}/actions/comments?key={{Key}}&token={{Token}}&text=Added comment into {{CardName}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"cards",
+										"{{idCard}}",
+										"actions",
+										"comments"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "text",
+											"value": "Added comment into {{CardName}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Checklist to a Card",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"jsonData = JSON.parse(responseBody)\r",
+											"pm.environment.set('idChecklist', jsonData.id)\r",
+											"console.log(\"idChecklist: \" + jsonData.id)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/checklists/?key={{Key}}&token={{Token}}&name=Checklist added in {{CardName}}&idCard={{idCard}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"checklists",
+										""
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "name",
+											"value": "Checklist added in {{CardName}}"
+										},
+										{
+											"key": "idCard",
+											"value": "{{idCard}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Checklist Items to a Card",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/checklists/{{idChecklist}}/checkItems?key={{Key}}&token={{Token}}&name=Checklist Item added.&idCard={{idCard}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"checklists",
+										"{{idChecklist}}",
+										"checkItems"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "name",
+											"value": "Checklist Item added."
+										},
+										{
+											"key": "idCard",
+											"value": "{{idCard}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/search/?key={{Key}}&token={{Token}}&query=new",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"search",
+										""
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "query",
+											"value": "new"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Negative Cases",
+					"item": [
+						{
+							"name": "Create Label without Label Name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/labels/?key={{Key}}&token={{Token}}&idBoard={{idBoard}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"labels",
+										""
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "idBoard",
+											"value": "{{idBoard}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Label with Invalid Label Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/labels/{{idBoard}}?key={{Key}}&token={{Token}}",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"labels",
+										"{{idBoard}}"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Card with Invalid Due date format",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/cards/{{idCard}}/?key={{Key}}&token={{Token}}&idLabels={{idLabel}}&due=25-08-2025",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"cards",
+										"{{idCard}}",
+										""
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "idLabels",
+											"value": "{{idLabel}}"
+										},
+										{
+											"key": "due",
+											"value": "25-08-2025"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Blank Comment to a Card",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/cards/{{idCard}}/actions/comments?key={{Key}}&token={{Token}}&text=",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"cards",
+										"{{idCard}}",
+										"actions",
+										"comments"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "text",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search without any Keyword",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/1/search/?key={{Key}}&token={{Token}}&query=",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"1",
+										"search",
+										""
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{Key}}"
+										},
+										{
+											"key": "token",
+											"value": "{{Token}}"
+										},
+										{
+											"key": "query",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
